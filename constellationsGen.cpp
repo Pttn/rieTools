@@ -3,6 +3,7 @@
 
 // Depends on GMP (with its C++ wrapper)
 // Compile with 'g++ constellationsGen.cpp -O3 -o constellationsGen -l gmp -l gmpxx'
+// Only tested on Linux (Debian 9)
 // By default, will generate the 100 first constellations of type (n, n + 4, n + 6, n + 10, n + 12, n + 16) without any optimization
 // Edit the offsets vector and constellationsGen arguments in the main to adapt to your needs
 
@@ -56,14 +57,14 @@ std::vector<uint64_t> constellationsGen(const std::vector<uint64_t> &offsets, ui
 		if (pn != 0) primorial = primorials[pn];
 		std::cout << "P" << pn << " = " << primorial << std::endl;
 		
-		mpz_class gmpX(0);
+		mpz_class x(0);
 		while (tuplesCount[offsets.size()] < ccount) {
 			uint8_t tupleSize(0);
 			bool tuple(true);
-			mpz_class gmpX2(gmpX + primorialOffset), candidate(gmpX2);
+			mpz_class x2(x + primorialOffset), candidate(x2);
 			for (std::vector<uint64_t>::size_type j(0) ; j < offsets.size() ; j++) {
-				gmpX2 += offsets[j];
-				if (mpz_probab_prime_p(gmpX2.get_mpz_t(), 40) != 0) {
+				x2 += offsets[j];
+				if (mpz_probab_prime_p(x2.get_mpz_t(), 40) != 0) {
 					tupleSize++;
 					tuplesCount[tupleSize]++;
 				}
@@ -80,13 +81,16 @@ std::vector<uint64_t> constellationsGen(const std::vector<uint64_t> &offsets, ui
 					}
 				}
 			}
-			gmpX += primorial;
+			x += primorial;
 		}
 	}
 	return tuplesCount;
 }
 
 int main() {
+	std::cout << "constellationsGen from rieTools, by Pttn" << std::endl;
+	std::cout << "Project page: https://github.com/Pttn/rieTools" << std::endl;
+	std::cout << "--------------------------------------------------------------------------------" << std::endl;
 	init();
 	std::vector<uint64_t> offsets = {0, 4, 2, 4, 2, 4};
 	std::vector<uint64_t> tuplesCount;
