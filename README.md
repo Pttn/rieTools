@@ -5,7 +5,8 @@ rieTools is a collection of one-source-file tools related to the Riecoin project
 ## Current tools
 
 * constellationsGen: generate prime constellations of a given type, can use wheel factorization;
-* keysGen: generates Riecoin addresses with the private and public keys.
+* keysGen: generates Riecoin addresses with the private and public keys;
+* blockHeaderDecode: decodes a given Riecoin block header and tell if the numbers of its 6-tuple are primes.
 
 They can be compiled using a single line of code, given in the corresponding source code.
 
