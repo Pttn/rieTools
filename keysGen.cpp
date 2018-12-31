@@ -4,11 +4,12 @@
 // Depends on GMP (with its C++ wrapper) and LibSsl (LibCrypto)
 // Compile with 'g++ keysGen.cpp -Os -o keysGen -l gmp -l gmpxx -l crypto'
 // Only tested on Linux (Debian 9)
-// By default, will generate 10 addresses
+// By default, will generate 1 address
 
 #include <iostream>
 #include <vector>
 #include <array>
+#include <bitset>
 #include <random>
 #include <iomanip>
 #include <gmp.h>
@@ -246,9 +247,29 @@ bool ecdsaPubGen(const std::vector<uint8_t> &prvBin, std::string &pubHexFull, st
 }
 
 void keysGen() {
+	// Generate a random binary private key with optional userEntry entries from the user.
 	std::vector<uint8_t> prvBin;
-	// Generate a random binary private key
-	for (uint8_t i(0) ; i < 32 ; i++) prvBin.push_back(rand(0x00, 0xFF));
+        std::cout << "We need 32 random numbers between 0 and 255 to generate one private key. How many random numbers you would like to provide(0-32)?" << std::endl;
+        int userEntry;
+        std::cin >> userEntry;
+	if (userEntry < 0) userEntry = 0;
+	if (userEntry > 32) userEntry = 32;
+	int machineEntry = 32 - userEntry;
+	std::cout << "OK you will provide " << userEntry << " random numbers and the program will generate the rest " << machineEntry << " random numbers." << std::endl;
+        for (uint8_t i(0) ; i < userEntry ; i++) {
+		std::cout << "Please enter a random number between 0 and 255 (" << (int) (i+1) << " out of " << userEntry << "):" << std::endl;
+		int r;
+		std::cin >> r;
+		std::cout << "we got " << r << " or " << std::bitset<8>((uint8_t) r) << std::endl;
+                prvBin.push_back(r);
+        }
+        std::cout << "Generating the rest " << machineEntry << " random numbers." << std::endl;
+        for (uint8_t i(0) ; i < machineEntry ; i++) {
+		uint8_t r = rand(0x00, 0xFF);
+		std::cout << "Random number " << userEntry + i + 1 << " is " << (int) r << " or " << std::bitset<8>(r) << std::endl;
+		prvBin.push_back(r);
+	}
+
 	// Or choose a private key
 	// prvBin = hexStrToV8("e9d11db7a625f642f0f8ba9111b29df1f56f03288243d924d449da3805bc52fc");
 	
@@ -280,8 +301,8 @@ void keysGen() {
 }
 
 int main() {
-	uint32_t keys(10);
-	std::cout << "keysGen from rieTools, by Pttn" << std::endl;
+	uint32_t keys(1);
+	std::cout << "keysGen from rieTools, modified by lzknr, originally by Pttn." << std::endl;
 	std::cout << "Project page: https://github.com/Pttn/rieTools" << std::endl;
 	for (uint32_t i(0) ; i < keys ; i++) {
 		std::cout << "--------------------------------------------------------------------------------" << std::endl;
