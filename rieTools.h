@@ -33,3 +33,4 @@ std::vector<uint8_t> addrToScriptPubKey(std::vector<uint8_t> addr);
 bool ecdsaPubGen(const std::vector<uint8_t> &prvBin, std::string &pubHexFull, std::string &pubHexCompressed);
 uint32_t getCompact(uint32_t nCompact);
 uint32_t invEnd32(uint32_t x);
+uint32_t constellationCheck(mpz_class n, std::vector<uint64_t> offsets, uint32_t iters, bool verbose = false);

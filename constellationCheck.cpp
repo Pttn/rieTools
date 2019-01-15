@@ -3,11 +3,7 @@
 // Only tested on Linux (Debian 9)
 // Edit the offsets vector to adapt to your needs
 
-#include <iostream>
-#include <vector>
-#include <array>
-#include <gmp.h>
-#include <gmpxx.h>
+#include "rieTools.h"
 
 bool validDec(const std::string &str) {
 	for (uint16_t i(0) ; i < str.size() ; i++) {
@@ -18,7 +14,7 @@ bool validDec(const std::string &str) {
 }
 
 int main() {
-	std::cout << "tupleCheck from rieTools, by Pttn" << std::endl;
+	std::cout << "constellationCheck from rieTools, by Pttn" << std::endl;
 	std::cout << "Project page: https://github.com/Pttn/rieTools" << std::endl;
 	std::cout << "--------------------------------------------------------------------------------" << std::endl;
 	std::vector<uint64_t> offsets = {0, 4, 2, 4, 2, 4};
@@ -42,28 +38,14 @@ int main() {
 	if (!validDec(n))
 		std::cerr << "Invalid number!" << std::endl;
 	else {
-		std::array<std::string, 3> results = {"not prime", "probably prime", "prime"};
-		uint32_t iters(100), offset(0), primes(0);
 		mpz_class N(n);
 		
-		std::cout << "Length: " << mpz_sizeinbase(N.get_mpz_t(), 2) << " bits, " << mpz_sizeinbase(N.get_mpz_t(), 10) << " digits in base 10" << std::endl;
-		
-		for (uint32_t i(0) ; i < offsets.size() ; i++) {
-			offset += offsets[i];
-			N += offsets[i];
-			uint32_t result(mpz_probab_prime_p(N.get_mpz_t(), iters));
-			std::cout << "n + " << offset << " is " << results[result] << std::endl;
-			if (result != 0) primes++;
-		}
-		
+		uint32_t primes(constellationCheck(N, offsets, 100, true));
 		std::cout << "--------------------------------------------------------------------------------" << std::endl;
-		
 		if (primes == offsets.size())
 			std::cout << "Congratulations, you found a prime constellation :D (provided that the given 'constellation type' is a valid one) !" << std::endl;
 		else
 			std::cout << "Sorry, only " << primes << " numbers out of " << offsets.size() << " are prime." << std::endl;
-		
-		std::cout << "Probably prime means having a probability of 2^(-" << 2*iters << ") of being a composite number identified as a prime." << std::endl;
 	}
 	
 	return 0;

@@ -1,6 +1,6 @@
 # rieTools
 
-rieTools is a collection of one-source-file tools related to the Riecoin project. Its purpose is mainly personal, to help me do some testing or better understand some concepts. Or simply for convenience. But who knows if they could be useful to other people (not necessarily related to Riecoin), so I make them public.
+rieTools is a collection of tools related to the Riecoin project. Its purpose is mainly personal, to help me do some testing or better understand some concepts. Or simply for convenience. But who knows if they could be useful to other people (not necessarily related to Riecoin), so I make them public.
 
 ## Current tools
 

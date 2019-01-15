@@ -74,21 +74,9 @@ int main() {
 			
 			mpz_class n(target + X);
 			std::cout << "-> n = " << n << std::endl;
-			std::array<std::string, 3> result = {"not prime", "probably prime", "prime"};
 			
-			uint32_t iters(40);
-			std::cout << "n is " << result[mpz_probab_prime_p(n.get_mpz_t(), iters)] << std::endl;
-			n += 4;
-			std::cout << "n + 4 is " << result[mpz_probab_prime_p(n.get_mpz_t(), iters)] << std::endl;
-			n += 2;
-			std::cout << "n + 6 is " << result[mpz_probab_prime_p(n.get_mpz_t(), iters)] << std::endl;
-			n += 4;
-			std::cout << "n + 10 is " << result[mpz_probab_prime_p(n.get_mpz_t(), iters)] << std::endl;
-			n += 2;
-			std::cout << "n + 12 is " << result[mpz_probab_prime_p(n.get_mpz_t(), iters)] << std::endl;
-			n += 4;
-			std::cout << "n + 16 is " << result[mpz_probab_prime_p(n.get_mpz_t(), iters)] << std::endl;
-			std::cout << "Probably prime means having a probability of 2^(-" << 2*iters << ") of being a composite number identified as a prime." << std::endl;
+			std::vector<uint64_t> offsets = {0, 4, 2, 4, 2, 4};
+			constellationCheck(n, offsets, 40, true);
 		}
 	}
     return 0;

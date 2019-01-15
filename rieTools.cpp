@@ -280,3 +280,21 @@ uint32_t getCompact(uint32_t nCompact) {
 uint32_t invEnd32(uint32_t x) {
 	return ((x << 24) & 0xff000000u) | ((x << 8) & 0x00ff0000u) | ((x >> 8) & 0x0000ff00u) | ((x >> 24) & 0x000000ffu);
 }
+
+uint32_t constellationCheck(mpz_class n, std::vector<uint64_t> offsets, uint32_t iters, bool verbose) {
+	const std::array<std::string, 3> results = {"not prime", "probably prime", "prime"};
+	uint32_t offset(0), primes(0);
+	
+	if (verbose) std::cout << "Length: " << mpz_sizeinbase(n.get_mpz_t(), 2) << " bits, " << mpz_sizeinbase(n.get_mpz_t(), 10) << " digits in base 10" << std::endl;
+	
+	for (uint32_t i(0) ; i < offsets.size() ; i++) {
+		offset += offsets[i];
+		n += offsets[i];
+		uint32_t result(mpz_probab_prime_p(n.get_mpz_t(), iters));
+		if (verbose) std::cout << "n + " << offset << " is " << results[result] << std::endl;
+		if (result != 0) primes++;
+	}
+	
+	if (verbose) std::cout << "Probably prime means having a probability of 2^(-" << 2*iters << ") of being a composite number identified as a prime." << std::endl;
+	return primes;
+}
