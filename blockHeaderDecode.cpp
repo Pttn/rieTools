@@ -1,10 +1,12 @@
 // (c) 2018 Pttn (https://github.com/Pttn/rieTools)
 // Simple Riecoin Blockheader decoder, simply decomposes the block header and show if the numbers in the 6-tuple are prime
+// You must use strings from getblockheader
 // The official FAQ may help: http://riecoin.org/faq.html
 
-// Sample blockheaders:
-// 00000020cc859e93e78e17234f8c7ffa51e67da737a26095237bac43f11dd1e3e7ece0888a4880aa5ddf42d9faaa713b7d370ce4c99ca2a894b65842a5c1716de4a51cd5004f0502a376f95b00000000f5aaaf9f81e899f0884f59429b85298daedcbe7204f91dfe7a307e50a4e97f27
-// 020000007587e684cefb59a5f440e017a75ebe25bc3b6faf6c4cb7c9405c2879acd2b18e11932f89e9c9a35e46544a46381f771b51a67518595c2328de863bfb935f6e1900300102bd07fa5b000000008f8f4021ac38014d8d131f270c7b8fd216b89b75c23c05c272574e312e8bdd10
+// To get any block header, run getblockhash and getblockheader commands in the Debug Console in Riecoin-Qt
+// Example for Block 1000000:
+// getblockhash 1000000 -> 0782988fb7c15f1254c2b76b34a3dfdf99620829bc757abc4e90e00800f79861
+// getblockheader 0782988fb7c15f1254c2b76b34a3dfdf99620829bc757abc4e90e00800f79861 false -> 02000000e5f387ef33ae894a6e13ab37e1c3cd35d6e25db824f20bdf4a3f4952e2c8c3e88a1d76d33c0279fb538765e3638572f65165ff9646d89d3b5a40879d5cb653fd4ff3095c00000000003c05023335aac7c401c3ef938b0e0673b5557350240d47cad658c0e478d8988843fa4e
 
 #include "rieTools.h"
 
@@ -31,6 +33,13 @@ int main() {
 		if (!validHex(bhStr))
 			std::cerr << "Invalid Hex string!" << std::endl;
 		else {
+			// For some reason, the time and the difficulty are reversed for the Sha256^2 later
+			// Reversing these will also give the corresponding submitblock strings
+			std::cout << bhStr << std::endl;
+			std::string timeSubStr(bhStr.substr(136, 16)), difficultySubStr(bhStr.substr(152, 8));
+			for (uint64_t i(0) ; i < 16 ; i++) bhStr[144 + i] = timeSubStr[i];
+			for (uint64_t i(0) ; i < 8 ; i++)  bhStr[136 + i] = difficultySubStr[i];
+			std::cout << bhStr << std::endl;
 			std::cout << "--------------------------------------------------------------------------------" << std::endl;
 			uint32_t version(invEnd32(strtol(bhStr.substr(0, 8).c_str(), NULL, 16)));
 			std::cout << "Version: " << bhStr.substr(0, 8) << " -> " << version << std::endl;
