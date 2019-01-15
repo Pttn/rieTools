@@ -9,7 +9,13 @@ rieTools is a collection of one-source-file tools related to the Riecoin project
 * keysGen: generates Riecoin addresses with the private and public keys;
 * blockHeaderDecode: decodes a given Riecoin block header and tell if the numbers of its 6-tuple are primes.
 
-They can be compiled using a single line of code, given in the corresponding source code.
+## Compilation
+
+The codes depend on GMP (with its C++ wrapper) or on LibSsl (LibCrypto), please install these dependencies.
+
+Then compile all tools with `make`, or individially with for example `make keysGen`.
+
+Only tested on Linux (Debian 9).
 
 ## Author and license
 

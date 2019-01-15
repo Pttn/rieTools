@@ -1,8 +1,5 @@
 // (c) 2018 Pttn (https://github.com/Pttn/rieTools)
 // Simple tool to check if a number is the base prime of a prime constellation
-
-// Depends on GMP (with its C++ wrapper)
-// Compile with 'g++ constellationCheck.cpp -O3 -o constellationCheck -l gmp -l gmpxx'
 // Only tested on Linux (Debian 9)
 // Edit the offsets vector to adapt to your needs
 
@@ -48,6 +45,8 @@ int main() {
 		std::array<std::string, 3> results = {"not prime", "probably prime", "prime"};
 		uint32_t iters(100), offset(0), primes(0);
 		mpz_class N(n);
+		
+		std::cout << "Length: " << mpz_sizeinbase(N.get_mpz_t(), 2) << " bits, " << mpz_sizeinbase(N.get_mpz_t(), 10) << " digits in base 10" << std::endl;
 		
 		for (uint32_t i(0) ; i < offsets.size() ; i++) {
 			offset += offsets[i];

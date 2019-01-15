@@ -1,9 +1,5 @@
 // (c) 2018 Pttn (https://github.com/Pttn/rieTools)
 // Prime constellations generator, supports wheel factorization (see https://da-data.blogspot.com/2014/03/fast-prime-cluster-search-or-building.html for explanations)
-
-// Depends on GMP (with its C++ wrapper)
-// Compile with 'g++ constellationsGen.cpp -O3 -o constellationsGen -l gmp -l gmpxx'
-// Only tested on Linux (Debian 9)
 // By default, will generate the 100 first constellations of type (n, n + 4, n + 6, n + 10, n + 12, n + 16) without any optimization
 // Edit the offsets vector and constellationsGen arguments in the main to adapt to your needs
 
