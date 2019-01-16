@@ -1,3 +1,5 @@
+// (c) 2018-2019 Pttn (https://github.com/Pttn/rieTools)
+
 #include <iostream>
 #include <vector>
 #include <array>
@@ -34,3 +36,4 @@ bool ecdsaPubGen(const std::vector<uint8_t> &prvBin, std::string &pubHexFull, st
 uint32_t getCompact(uint32_t nCompact);
 uint32_t invEnd32(uint32_t x);
 uint32_t constellationCheck(mpz_class n, std::vector<uint64_t> offsets, uint32_t iters, bool verbose = false);
+mpz_class blockHeaderDecode(std::string bhStr, bool verbose = false);

@@ -1,4 +1,4 @@
-// (c) 2018 Pttn (https://github.com/Pttn/rieTools)
+// (c) 2018-2019 Pttn (https://github.com/Pttn/rieTools)
 // Simple tool to check if a number is the base prime of a prime constellation
 // Only tested on Linux (Debian 9)
 // Edit the offsets vector to adapt to your needs

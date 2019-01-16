@@ -1,3 +1,5 @@
+// (c) 2018-2019 Pttn (https://github.com/Pttn/rieTools)
+
 #include "rieTools.h"
 
 void error(std::string message) {std::cerr << message << std::endl;}
@@ -297,4 +299,45 @@ uint32_t constellationCheck(mpz_class n, std::vector<uint64_t> offsets, uint32_t
 	
 	if (verbose) std::cout << "Probably prime means having a probability of 2^(-" << 2*iters << ") of being a composite number identified as a prime." << std::endl;
 	return primes;
+}
+
+mpz_class blockHeaderDecode(std::string bhStr, bool verbose) {
+	uint32_t version(invEnd32(strtol(bhStr.substr(0, 8).c_str(), NULL, 16)));
+	if (verbose) {
+		std::cout << "Version: " << bhStr.substr(0, 8) << " -> " << version << std::endl;
+		std::cout << "Previous Block Hash: " << bhStr.substr(8, 64) << std::endl;
+		std::cout << "Merkle Root: " << bhStr.substr(72, 64) << std::endl;
+	}
+	uint32_t diff(getCompact(invEnd32(strtol(bhStr.substr(136, 8).c_str(), NULL, 16))));
+	if (verbose) std::cout << "Difficulty: " << bhStr.substr(136, 8) << " -> " << diff << std::endl;
+	uint64_t time(strtoull(bhStr.substr(144, 16).c_str(), NULL, 16));
+	if (verbose) {
+		std::cout << "Time: " << bhStr.substr(144, 16) << " -> " << invEnd32(((uint32_t*) &time)[1]) << std::endl;
+		std::cout << "Offset (X) : " << bhStr.substr(160, 64) << std::endl;
+		std::cout << "Sha256^2 (without Offset) (S) : " << v8ToHexStr(sha256sha256(hexStrToV8(bhStr.substr(0, 160)).data(), 80)) << std::endl;
+		std::cout << "Sha256^2 (with Offset)        : " << v8ToHexStr(sha256sha256(hexStrToV8(bhStr.substr(0, 224)).data(), 112)) << std::endl;
+		std::cout << "--------------------------------------------------------------------------------" << std::endl;
+		std::cout << "Proposed solution: n = 2^(D - 1) + S*2^(D - 265) + X, with" << std::endl;
+		std::cout << "D = " << diff << std::endl;
+	}
+	
+	std::vector<uint8_t> SV8(32), tmp(sha256sha256(hexStrToV8(bhStr.substr(0, 160)).data(), 80));
+	for (uint64_t i(0) ; i < 256 ; i++)
+		SV8[i/8] |= (((tmp[i/8] >> (i % 8)) & 1) << (7 - (i % 8)));
+	mpz_class S(v8ToHexStr(SV8).c_str(), 16), target(1);
+	if (verbose) std::cout << "S = " << S << std::endl;
+	mpz_mul_2exp(S.get_mpz_t(), S.get_mpz_t(), diff - 265);
+	mpz_mul_2exp(target.get_mpz_t(), target.get_mpz_t(), diff - 1);
+	target += S;
+	// if (verbose) std::cout << "Target = " << target << std::endl;
+	
+	std::vector<uint8_t> xV8;
+	tmp = hexStrToV8(bhStr.substr(160, 64));
+	for (uint8_t i(0) ; i < tmp.size() ; i++) xV8.push_back(tmp[tmp.size() - i - 1]);
+	mpz_class X(v8ToHexStr(xV8).c_str(), 16);
+	if (verbose) std::cout << "X = " << X << std::endl;
+	
+	mpz_class n(target + X);
+	if (verbose) std::cout << "-> n = " << n << std::endl;
+	return n;
 }

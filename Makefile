@@ -1,10 +1,16 @@
 CXX    = g++
 CFLAGS = -Wall -Wextra -std=gnu++11
-LIBS   = -lcrypto -lgmpxx -lgmp
+LIBS   = -lcrypto -lgmpxx -lgmp -ljansson -lcurl
 
-TOOLS  = keysGen constellationsGen constellationCheck blockHeaderDecode
+TOOLS  = keysGen constellationsGen constellationCheck blockHeaderDecode getConstellations
 
 all: $(TOOLS)
+
+getConstellations: getConstellations.cpp rieTools.cpp rieTools.h
+	$(CXX) $(CFLAGS) -o getConstellations $^ $(LIBS)
+
+getConstellations.o: getConstellations.cpp
+	$(CXX) $(CFLAGS) -c -o getConstellations.o getConstellations.cpp
 
 blockHeaderDecode: blockHeaderDecode.cpp rieTools.cpp rieTools.h
 	$(CXX) $(CFLAGS) -o blockHeaderDecode $^ $(LIBS)

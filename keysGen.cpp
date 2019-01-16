@@ -1,4 +1,4 @@
-// (c) 2018 Pttn (https://github.com/Pttn/rieTools)
+// (c) 2018-2019 Pttn (https://github.com/Pttn/rieTools)
 // Simple Riecoin Keys (private, public, address) generator
 // By default, will generate 10 addresses
 
