@@ -114,7 +114,8 @@ int main() {
 		for (uint64_t i(0) ; i < 8 ; i++)  blockHeaderHex[136 + i] = difficultySubStr[i];
 		mpz_class n(blockHeaderDecode(blockHeaderHex));
 		std::vector<uint64_t> offsets = {0, 4, 2, 4, 2, 4};
-		uint16_t primes(constellationCheck(n, offsets, 40));
+		uint16_t primes(0);
+		if (test == "yes") primes = constellationCheck(n, offsets, 40);
 		if (file) {
 			file << n;
 			if (test == "yes") file << " (" << primes << "/" << offsets.size() << ")";
